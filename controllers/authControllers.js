@@ -31,6 +31,36 @@ Output:
 const logout = (req, res) => {
     const token = req.headers.authorization;
     // Write your code here :)
+    try {
+
+        if (!token) {
+            return res.status(401).json({
+                status: 'Error',
+                message: 'Authentication failed: Missing token.'
+            })
+        }
+
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+
+        if (!decodedToken) throw Error("Error")
+        // console.log(decodedToken, "decodedToken")
+        // const userId = decodedToken.userId;
+
+        res.clearCookie('token'); // clear the cookies
+
+
+        return res.status(200).json({
+            status: "Success",
+            message: "Logged out successfully."
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            status: "Error",
+            message: "Something went wrong",
+            error
+        })
+    }
 };
 
 const signup = async (req, res) => {
